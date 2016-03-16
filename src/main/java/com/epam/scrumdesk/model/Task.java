@@ -1,11 +1,24 @@
 package com.epam.scrumdesk.model;
 
+import javax.persistence.*;
+
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
  */
+@Entity
+@Table(name = "TASK", catalog = "MEIR")
 public class Task {
+    private static final long serialVersionUID = 7885426911990685321L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TASK_SEQ")
+    @Column(name = "ID", unique = true, nullable = false)
     private long id;
+
+    @Column(name = "TEXT", nullable = false)
     private String text;
+
+    @Column(name = "STATUS", nullable = false)
     private String status;
 
     public long getId() {
