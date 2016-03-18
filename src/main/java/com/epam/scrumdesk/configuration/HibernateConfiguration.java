@@ -1,19 +1,21 @@
 package com.epam.scrumdesk.configuration;
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
@@ -23,47 +25,68 @@ import java.util.Properties;
 @ComponentScan({"com.epam.scrumdesk.configuration"})
 @PropertySource(value = {"classpath:application.properties"})
 public class HibernateConfiguration {
-    @Autowired
-    private Environment environment;
 
-    @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    @Value("${jdbc.driverClassName}") //TODO constant
+    private String DRIVER_CLASS_NAME;
+    @Value("${jdbc.url}")
+    private String URL;
+    @Value("${jdbc.username}")
+    private String USERNAME;
+    @Value("${jdbc.password")
+    private String PASSWORD;
+    @Value("${hibernate.show_sql}")
+    private boolean SHOW_SQL;
+    @Value("${hibernate_format_sql}")
+    private boolean FORMAT_SQL;
+    @Value("${hibernate.dialect}")
+    private String PLATFORM;
 
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+    private Database DATABASE = Database.ORACLE;
 
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[]{"com.epam.scrumdesk.model"});
-        sessionFactory.setHibernateProperties(hibernateProperties());
-
-        return sessionFactory;
-    }
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
+        dataSource.setUrl(URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
         return dataSource;
     }
 
-    private Properties hibernateProperties() {
-        Properties properties = new Properties();
-        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
-        return properties;
+    @Bean
+    public HibernateJpaVendorAdapter jpaVendorAdapter() {
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        jpaVendorAdapter.setDatabase(DATABASE);
+        jpaVendorAdapter.setShowSql(SHOW_SQL);
+        jpaVendorAdapter.setDatabasePlatform(PLATFORM);
+        jpaVendorAdapter.setGenerateDdl(FORMAT_SQL);
+        return jpaVendorAdapter;
     }
-
 
     @Bean
-    @Autowired
-    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-        HibernateTransactionManager txManager = new HibernateTransactionManager();
-        txManager.setSessionFactory(sessionFactory);
-        return txManager;
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactoryBean.setDataSource(dataSource());
+        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
+        return entityManagerFactoryBean;
     }
 
+    @Bean
+    public PersistenceAnnotationBeanPostProcessor persistenceAnnotationBeanPostProcessor() {
+        return new PersistenceAnnotationBeanPostProcessor();
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
+        return transactionManager;
+    }
 
 }
