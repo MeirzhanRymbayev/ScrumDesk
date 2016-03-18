@@ -16,16 +16,19 @@ import javax.servlet.ServletRegistration;
 public class AppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        WebApplicationContext context = getContext();
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+
+        context.register(AppConfig.class, HibernateConfiguration.class);
         servletContext.addListener(new ContextLoaderListener(context));
-        ServletRegistration.Dynamic dispather = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(context));
-        dispather.setLoadOnStartup(1);
-        dispather.addMapping("/*");
+
+
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(context));
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/");  //<<<<<<<<<<<<<<<<<<<  Here was incorrect mapping like "/*"
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("com.epam.scrumdesk.configuration");
         return context;
     }
 }
