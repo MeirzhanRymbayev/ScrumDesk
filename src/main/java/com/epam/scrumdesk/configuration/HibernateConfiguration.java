@@ -1,6 +1,7 @@
 package com.epam.scrumdesk.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +48,10 @@ public class HibernateConfiguration {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
-        dataSource.setUrl(URL);
-        dataSource.setUsername(USERNAME);
-        dataSource.setPassword(PASSWORD);
+        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        dataSource.setUrl("jdbc:oracle:thin:@//localhost:1521/XE");
+        dataSource.setUsername("MEIR");
+        dataSource.setPassword("sa");
         return dataSource;
     }
 
@@ -58,9 +59,9 @@ public class HibernateConfiguration {
     public HibernateJpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setDatabase(DATABASE);
-        jpaVendorAdapter.setShowSql(SHOW_SQL);
-        jpaVendorAdapter.setDatabasePlatform(PLATFORM);
-        jpaVendorAdapter.setGenerateDdl(FORMAT_SQL);
+        jpaVendorAdapter.setShowSql(true);
+        jpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.Oracle10gDialect");
+        jpaVendorAdapter.setGenerateDdl(true);
         return jpaVendorAdapter;
     }
 
@@ -70,6 +71,11 @@ public class HibernateConfiguration {
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         return entityManagerFactoryBean;
+    }
+
+    @Bean
+    public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer(){
+        return new PropertyPlaceholderConfigurer();
     }
 
     @Bean

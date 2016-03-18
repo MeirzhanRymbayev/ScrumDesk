@@ -10,8 +10,13 @@ import javax.persistence.*;
 public class Task {
     private static final long serialVersionUID = 7885426911990685321L;
 
+//    @GeneratedValue(strategy = GenerationType.AUTO, generator = "NEWS_SEQ")
+//    @SequenceGenerator(name = "NEWS_SEQ", sequenceName = "news_seq")
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TASK_SEQ")
+    @SequenceGenerator(name = "TASK_SEQ", sequenceName = "task_seq")
     @Column(name = "ID", unique = true, nullable = false)
     private long id;
 
