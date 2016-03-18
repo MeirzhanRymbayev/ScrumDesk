@@ -1,16 +1,14 @@
 package com.epam.scrumdesk.dao;
 
-import com.epam.scrumdesk.model.Task;
-
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
  */
-public interface TaskDao {
-    Task fingById(long id);
+public interface TaskDao<T> {
 
-    void save(Task task);
+    T findById(long id);
 
-    void update(Task task);
+    void save(T t);
 
+    void update(T t);
 
 }

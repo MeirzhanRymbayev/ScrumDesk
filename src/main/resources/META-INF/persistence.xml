@@ -1,0 +1,5 @@
+<persistence>
+    <persistence-unit name="SCRUMDESK">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    </persistence-unit>
+</persistence>

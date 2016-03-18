@@ -2,33 +2,41 @@ package com.epam.scrumdesk.dao;
 
 import com.epam.scrumdesk.model.Task;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
  */
-@Repository
-public class TaskDaoImpl implements  TaskDao{
-    @Autowired
-    SessionFactory sessionFactory;
+@Repository("taskDao")
+@Transactional
+public class TaskDaoImpl implements TaskDao<Task> {
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Override
-    public Task fingById(long id) {
-        Session session = sessionFactory.getCurrentSession();
-         return (Task) session.get(Task.class, id);
+    public Task findById(long id) {
+        return manager.find(Task.class, id);
+
     }
 
     @Override
     public void save(Task task) {
-        Session session = sessionFactory.getCurrentSession();
-        session.save(task);
+        manager.persist(task);
     }
 
+    /*
+    * Entity will be updated in database automatically, because class was marked as @Transactional
+    * , thus every method in class will be  @Transactional.
+    * */
     @Override
     public void update(Task task) {
-        Session session = sessionFactory.getCurrentSession();
-        session.update(task);
+        Task updatedTask = manager.find(Task.class, task.getId());
+        updatedTask.setText(task.getText());
+        updatedTask.setStatus(task.getStatus());
     }
 }
