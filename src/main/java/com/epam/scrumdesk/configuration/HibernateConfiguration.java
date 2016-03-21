@@ -21,10 +21,10 @@ import javax.sql.DataSource;
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
  */
-@Configuration
 @EnableTransactionManagement
 @ComponentScan({"com.epam.scrumdesk.configuration"})
-@PropertySource(value = {"classpath:application.properties"})
+@Configuration
+@PropertySource("classpath:database.properties")
 public class HibernateConfiguration {
 
     @Value("${jdbc.driverClassName}") //TODO constant
