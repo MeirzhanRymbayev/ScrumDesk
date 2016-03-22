@@ -6,12 +6,17 @@ App.controller('AppController', ['$scope', 'TaskService', function($scope, TaskS
     self.notreadytasks=[];
     self.inprogresstasks=[];
     self.readytasks=[];
+
     self.task = {id: null, text: '', status: ''};
 
     self.fetchAllTasks = function(){
         TaskService.fetchAllTasks()
             .then(
                 function(response){
+                    self.alltasks = [];
+                    self.notreadytasks=[];
+                    self.inprogresstasks=[];
+                    self.readytasks=[];
                     self.alltasks = response;
                     console.log('Data from server was loaded')
                 },
@@ -70,22 +75,63 @@ App.controller('AppController', ['$scope', 'TaskService', function($scope, TaskS
       console.log('self.readytasks.length = ' + self.readytasks.length)
     };
 
+    self.getTaskObject = function(id){
+      for(var i = 0; i < self.alltasks.length; i++){
+          if(self.alltasks[i].id === id) {
+              self.task = angular.copy(self.alltasks[i]);
+              break;
+          }
+      }
+    };
+
+
+    /***************************Status change methods****************************************************/
+
+    self.makeNotReadyInProgress = function(id){
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.notreadytasks, self.inprogresstasks, 'in progress', self.task);
+        TaskService.fetchAllTasks();
+    }
+
+    self.makeNotReadyDone = function(id) {
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.notreadytasks, self.readytasks, 'done', self.task);
+        TaskService.fetchAllTasks();
+    };
+
+    self.makeInProgressToDo = function(id) {
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.inprogresstasks, self.notreadytasks, 'to do', self.task);
+        TaskService.fetchAllTasks();
+    };
+
+    self.makeInProgressDone = function(id) {
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.inprogresstasks, self.readytasks, 'done', self.task);
+        TaskService.fetchAllTasks();
+    };
+
+    self.makeDoneToDo = function(id) {
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.readytasks, self.notreadytasks, 'to do', self.task);
+        TaskService.fetchAllTasks();
+    };
+
+    self.makeDoneInProgress = function(id) {
+        self.getTaskObject(id);
+        TaskService.replaceTask(id, self.readytasks, self.inprogresstasks, 'in progress', self.task);
+        TaskService.fetchAllTasks();
+    };
+
+    /****************************************************************************************************/
+
     self.fetchAllTasks();
 
     //self.arraysLength();
 
     //self.distributeTasks();
 
-    self.replace = function(id){
-        for(var i = 0; self.notreadytasks.length; i++){
-            self.task = self.notreadytasks[i].id;
-            if(self.task == id){
-                self.readytasks.push(self.task);
-                self.notreadytasks.splice(i, 1);
-                fetchAllTasks();
-            }
-        }
-    };
+
 
 
 

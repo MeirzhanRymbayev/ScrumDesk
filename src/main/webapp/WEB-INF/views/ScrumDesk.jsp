@@ -24,7 +24,8 @@
                         <p ng-bind="task.id"></p>
                         <p ng-bind="task.text"></p>
                         <p ng-bind="task.status"></p>
-                        <button type="button" ng-click="ctrl.replace(task.id)">Replace</button>
+                        <button type="button" ng-click="ctrl.makeNotReadyInProgress(task.id)">In progress</button>
+                        <button type="button" ng-click="ctrl.makeNotReadyDone(task.id)">Done</button>
                     </div>
                 </td>
 
@@ -33,7 +34,8 @@
                         <p ng-bind="task.id"></p>
                         <p ng-bind="task.text"></p>
                         <p ng-bind="task.status"></p>
-                        <button type="button" ng-click="ctrl.replace(task.id)">Replace</button>
+                        <button type="button" ng-click="ctrl.makeInProgressToDo(task.id)">To do</button>
+                        <button type="button" ng-click="ctrl.makeInProgressDone(task.id)">Done</button>
                     </div>
                 </td>
 
@@ -42,7 +44,8 @@
                         <p ng-bind="task.id"></p>
                         <p ng-bind="task.text"></p>
                         <p ng-bind="task.status"></p>
-                        <button type="button" ng-click="ctrl.replace(task.id)">Replace</button>
+                        <button type="button" ng-click="ctrl.makeDoneToDo(task.id)">To do</button>
+                        <button type="button" ng-click="ctrl.makeDoneInProgress(task.id)">In progress</button>
                     </div>
                 </td>
             </tr>
