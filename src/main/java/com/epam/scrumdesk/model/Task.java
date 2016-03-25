@@ -1,13 +1,14 @@
 package com.epam.scrumdesk.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
  */
 @Entity
 @Table(name = "TASK", catalog = "MEIR")
-public class Task {
+public class Task implements Serializable{
     private static final long serialVersionUID = 7885426911990685321L;
 
 //    @GeneratedValue(strategy = GenerationType.AUTO, generator = "NEWS_SEQ")
@@ -25,6 +26,26 @@ public class Task {
 
     @Column(name = "STATUS", nullable = false)
     private String status;
+
+    private User user;
+
+    public Task() {
+    }
+
+    public Task(String text, String status, User user) {
+        this.text = text;
+        this.status = status;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public long getId() {
         return id;
