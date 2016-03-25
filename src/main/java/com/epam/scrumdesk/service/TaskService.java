@@ -12,5 +12,5 @@ public interface TaskService {
 
     void updateTask(Task task);
 
-    List<Task> findAllUsers();
+    List<Task> findAll();
 }

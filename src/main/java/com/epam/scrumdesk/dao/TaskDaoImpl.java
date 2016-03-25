@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by Meirzhan_Rymbayev on 3/16/2016.
@@ -38,5 +40,11 @@ public class TaskDaoImpl implements TaskDao<Task> {
         Task updatedTask = manager.find(Task.class, task.getId());
         updatedTask.setText(task.getText());
         updatedTask.setStatus(task.getStatus());
+    }
+
+    @Override
+    public List<Task> findAll() {
+        Query query = manager.createQuery("Select t from Task t");
+        return (List<Task>) query.getResultList();
     }
 }

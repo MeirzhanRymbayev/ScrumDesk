@@ -8,12 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class MainController {
 
     @Autowired
     TaskService taskService;
 
+    @RequestMapping(value = "/task/", method = RequestMethod.GET)
+    public ResponseEntity<List<Task>> findAll() {
+        List<Task> tasks = taskService.findAll();
+
+        if (tasks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/task/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Task> updateTask(@PathVariable("id") long id, @RequestBody Task task) {

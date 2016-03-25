@@ -28,7 +28,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAllUsers() {
-        return taskDao.findAllTasks();
+    public List<Task> findAll() {
+        return taskDao.findAll();
     }
+
 }
