@@ -93,10 +93,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/java</directory>
                             <targetPath>WEB-INF/classes</targetPath>
+
                             <includes>
                                 <include>**/*.properties</include>
                                 <include>**/*.xml</include>

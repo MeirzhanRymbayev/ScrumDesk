@@ -10,9 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by Meirzhan_Rymbayev on 3/16/2016.
- */
+
 @Repository("taskDao")
 @Transactional
 public class TaskDaoImpl implements TaskDao<Task> {
@@ -43,7 +41,8 @@ public class TaskDaoImpl implements TaskDao<Task> {
     }
 
     @Override
-    public List<Task> findAllTasks() {
+    @SuppressWarnings("unchecked")
+    public List<Task> findAll() {
         Query query = manager.createQuery("select t from Task t");
         return (List<Task>)query.getResultList();
     }

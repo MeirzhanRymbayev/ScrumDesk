@@ -18,7 +18,7 @@ public class MainController {
     /*--------------------------------Retrieve all tasks---------------------------------------*/
     @RequestMapping(value = "/task/", method = RequestMethod.GET)
     public ResponseEntity<List<Task>> listAllTasks() {
-        List<Task> tasks = taskService.findAllUsers();
+        List<Task> tasks = taskService.findAll();
         if (tasks.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
