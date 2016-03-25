@@ -15,6 +15,5 @@ public interface TaskDao<T> {
 
     void update(T t);
 
-    List<T> findAll();
-
+    List<Task> findAllTasks();
 }

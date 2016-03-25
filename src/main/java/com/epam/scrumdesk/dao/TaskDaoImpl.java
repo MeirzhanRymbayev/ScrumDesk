@@ -43,8 +43,8 @@ public class TaskDaoImpl implements TaskDao<Task> {
     }
 
     @Override
-    public List<Task> findAll() {
-        Query query = manager.createQuery("Select t from Task t");
-        return (List<Task>) query.getResultList();
+    public List<Task> findAllTasks() {
+        Query query = manager.createQuery("select t from Task t");
+        return (List<Task>)query.getResultList();
     }
 }

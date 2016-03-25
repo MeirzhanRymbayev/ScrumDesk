@@ -5,28 +5,25 @@ import com.epam.scrumdesk.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class MainController {
 
     @Autowired
     TaskService taskService;
 
+    /*--------------------------------Retrieve all tasks---------------------------------------*/
     @RequestMapping(value = "/task/", method = RequestMethod.GET)
-    public ResponseEntity<List<Task>> findAll() {
-        List<Task> tasks = taskService.findAll();
-
-        if (tasks.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<List<Task>> listAllTasks() {
+        List<Task> tasks = taskService.findAllUsers();
+        if (tasks.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
+    /*--------------------------------Update a task--------------------------------------------*/
     @RequestMapping(value = "/task/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Task> updateTask(@PathVariable("id") long id, @RequestBody Task task) {
         Task currentTask = taskService.findById(id);
@@ -38,7 +35,6 @@ public class MainController {
 
         currentTask.setText(task.getText());
         currentTask.setStatus(task.getStatus());
-
 
         taskService.updateTask(currentTask);
 
